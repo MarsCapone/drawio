@@ -8,7 +8,17 @@ Interception = {
 
   onpage: function(args) {
     $('#' + args[0]).modal();
+  },
+
+  edges: function(e, b) {
+    if (!b) { return; } // this is in normal view
+
+    var split = e.text().split('::');
+    if (split.length > 1) {
+      e.text(split[1]);
+    }
   }
+
 }
 
 (function() {
@@ -18,6 +28,7 @@ Interception = {
 	var CHECK_TIME = 2000; // time to check if the image-refresh text is visible
 	var LOAD_TIME = 10000; // time to refresh existing images
 	var LOGGING = false; // enable logging
+  var EDGE_CHECK_TIME = 3000; // time between check for edge text
 
 	function setImage(o, u) {
 		// o => the div containing the image-refresh string
@@ -82,10 +93,43 @@ Interception = {
 			if (LOGGING) console.log(`Updating ${src} => ${epoch}.`);
 			image.attr('src', `${url}?${epoch}`);
 		}
-	}
+  }
+
+  function handleEdgeTexts() {
+    var exview = $('#ex-view').length === 1;
+
+    var normalEdgeTexts = $x('//div[not(@id="ex-view")]//div/div[contains(text(), "edge-text")]');
+    normalEdgeTexts.forEach(function(et) { 
+      var realEdge = $(et);
+      realEdge.hide();
+    });
+
+    if (exview) {
+      var modEdges = $x('//div[@id="ex-view"]//div/div[@class="edge-interception"]');
+      if (!modEdges.length) {
+        // there are no created fake edges, so we need to create them
+        var exEdgeTexts = $x('//div[@id="ex-view"]//div/div[contains(text(), "edge-text")]');
+        exEdgeTexts.forEach(function(et) {
+          et = $(et);
+          et.hide();
+
+          var fakeEdge = et.clone();
+          et.parent().append(fakeEdge);
+          fakeEdge.addClass('edge-interception');
+          fakeEdge.show();
+        });
+      }
+      // we've already created the modified edges, now just call the interception
+      // function on them.
+      modEdges.forEach(function(e) {
+        Interception.edge($(e), exview);
+      });
+    }
+  }
 
 	var updateLoop;
 	var imageRefreshLoop;
+  var exEdgeLoop;
 
 	setTimeout(function() {
 
@@ -98,6 +142,8 @@ Interception = {
 			if (LOGGING) console.log('Updating all images.');
 			updateExistingImages($('.image-refresh'));   
 		}, LOAD_TIME);
+
+    exEdgeLoop = setInterval(handleEdgeTexts, EDGE_CHECK_TIME);
 
     /* INJECT MODALS */
     Modals.forEach(function(m) {
