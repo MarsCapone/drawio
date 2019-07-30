@@ -30,6 +30,7 @@ Draw.loadPlugin(function(ui)
 		var sourceGraph = ui.editor.graph;
 		
 		var container = document.createElement('div');
+    container.setAttribute('id', 'ex-view');
 		container.style.position = 'absolute';
 		container.style.display = 'block';
 		container.style.background = '#ffffff';
