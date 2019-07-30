@@ -351,7 +351,7 @@ Draw.loadPlugin(function(ui)
 	ui.actions.addAction('exploreFromHere', function()
 	{
 		exploreFromHere(ui.editor.graph.getSelectionCell());
-	}, undefined, undefined, 'Ctrl+Alt+e');
+	}, undefined, undefined, Editor.ctrlKey + '+Alt+E');
 	
 	// Click handler for chromeless mode
 	if (ui.editor.isChromelessView())
