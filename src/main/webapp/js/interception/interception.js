@@ -17,9 +17,19 @@ Interception = {
     if (split.length > 1) {
       e.text(split[1]);
     }
+    e.show()
   }
+};
 
+function $x(p) {
+  var a = [];
+  var results = document.evaluate(p, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+  for (var i = 0; i < results.snapshotLength; i++) {
+    a.push(results.snapshotItem(i));
+  }
+  return a;
 }
+
 
 (function() {
 
@@ -28,7 +38,7 @@ Interception = {
 	var CHECK_TIME = 2000; // time to check if the image-refresh text is visible
 	var LOAD_TIME = 10000; // time to refresh existing images
 	var LOGGING = false; // enable logging
-  var EDGE_CHECK_TIME = 3000; // time between check for edge text
+  var EDGE_CHECK_TIME = 1000; // time between check for edge text
 
 	function setImage(o, u) {
 		// o => the div containing the image-refresh string
