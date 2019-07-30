@@ -1,4 +1,5 @@
-var Interception = {
+
+Interception = {
   popup: function(args) {
     var url = args.join(" ");
     $('#popup').load(url);
@@ -11,16 +12,12 @@ var Interception = {
 }
 
 (function() {
-  /* INJECT MODALS */
-  Modals.forEach(function(m) {
-    $('#modals').append(m);
-  }
 
   /* IMAGE LOADING */
 	var START_TIME = 3000; // time to wait for page to initialise
 	var CHECK_TIME = 2000; // time to check if the image-refresh text is visible
 	var LOAD_TIME = 10000; // time to refresh existing images
-	var LOGGING = true; // enable logging
+	var LOGGING = false; // enable logging
 
 	function setImage(o, u) {
 		// o => the div containing the image-refresh string
@@ -102,5 +99,9 @@ var Interception = {
 			updateExistingImages($('.image-refresh'));   
 		}, LOAD_TIME);
 
+    /* INJECT MODALS */
+    Modals.forEach(function(m) {
+      $('#modals').append(m);
+    });
 	}, 1000) // load this a bit later so that drawio has done it's stuff
 })()
