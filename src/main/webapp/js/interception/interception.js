@@ -10,14 +10,14 @@ Interception = {
     $('#' + args[0]).modal();
   },
 
-  edges: function(e, b) {
+  edge: function(e, b) {
     if (!b) { return; } // this is in normal view
 
     var split = e.text().split('::');
     if (split.length > 1) {
       e.text(split[1]);
     }
-    e.show()
+    e.show();
   }
 };
 
