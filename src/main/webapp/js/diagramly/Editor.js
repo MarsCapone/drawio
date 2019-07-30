@@ -3880,7 +3880,21 @@
 	 */
 	Graph.prototype.handleCustomLink = function(href)
 	{
-		if (href.substring(0, 17) == 'data:action/json,')
+    if (href.substring(0, 21) == 'data:action/customjs,')
+    {
+      var link = JSON.parse(href.substring(21));
+      if (link.fun != null) 
+      {
+        this.model.beginUpdate();
+        try {
+          window['Interception'][link.fun](link.args);
+        }
+        finally {
+          this.model.endUpdate();
+        }
+      }
+    }
+		else if (href.substring(0, 17) == 'data:action/json,')
 		{
 			// Some actions are stateless and must be handled before the transaction
 			var link = JSON.parse(href.substring(17));
